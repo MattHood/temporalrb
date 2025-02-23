@@ -179,5 +179,13 @@ module Temporal
       duration = Duration.new
       assert_equal 0, duration.sign
     end
+
+    def test_blank
+      duration = Duration.new(1)
+      assert_equal false, duration.blank?
+
+      duration = Duration.new
+      assert_equal true, duration.blank?
+    end
   end
 end

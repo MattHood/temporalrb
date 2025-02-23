@@ -79,6 +79,10 @@ module Temporal
       check_sign!(fields)
     end
 
+    def blank?
+      sign == 0
+    end
+
     private
 
     def fields
