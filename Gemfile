@@ -12,3 +12,5 @@ gem "minitest", "~> 5.16"
 gem "standard", "~> 1.3"
 
 gem "matrix", "~> 0.4.2"
+
+gem "debug", "~> 1.10"
