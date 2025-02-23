@@ -49,9 +49,7 @@ module Temporal
         raise RangeError.new("Arguments must be integers")
       end
 
-      unless args.all? { _1 >= 0 } || args.all? { _1 <= 0 }
-        raise RangeError.new("Mixed-sign values not allowed as duration fields")
-      end
+      check_sign! args
 
       calendar_args = [years, months, weeks]
       unless calendar_args.all? { _1 < 2**32 }
@@ -75,6 +73,28 @@ module Temporal
       @milliseconds = milliseconds
       @microseconds = microseconds
       @nanoseconds = nanoseconds
+    end
+
+    def sign
+      check_sign!(fields)
+    end
+
+    private
+
+    def fields
+      [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]
+    end
+
+    def check_sign!(args)
+      if args.all? { _1 == 0 }
+        0
+      elsif args.all? { _1 >= 0 }
+        1
+      elsif args.all? { _1 <= 0 }
+        -1
+      else
+        raise RangeError.new("Mixed-sign values not allowed as duration fields")
+      end
     end
   end
 end

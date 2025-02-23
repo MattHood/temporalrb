@@ -162,5 +162,22 @@ module Temporal
       assert_equal 9, duration.microseconds
       assert_equal 10, duration.nanoseconds
     end
+
+    def test_sign
+      duration = Duration.new(1)
+      assert_equal 1, duration.sign
+
+      duration = Duration.new(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+      assert_equal 1, duration.sign
+
+      duration = Duration.new(-1)
+      assert_equal(-1, duration.sign)
+
+      duration = Duration.new(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
+      assert_equal(-1, duration.sign)
+
+      duration = Duration.new
+      assert_equal 0, duration.sign
+    end
   end
 end
