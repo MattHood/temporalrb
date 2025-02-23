@@ -244,5 +244,22 @@ module Temporal
 
       assert_equal Duration.from("P3D"), Duration.from("P1D") + Duration.from("P2D")
     end
+
+    def test_negated
+      all_ones = Duration.new(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+      all_zeros = Duration.new
+      all_minus_ones = Duration.new(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
+
+      assert_equal all_ones, all_minus_ones.negated
+      assert_equal all_minus_ones, all_ones.negated
+      assert_equal all_zeros, all_zeros.negated
+
+      assert_equal all_ones.negated, -all_ones
+    end
+
+    def test_identity
+      duration = Duration.from("P1Y1M1W1DT1H1M1S")
+      assert_equal duration, +duration
+    end
   end
 end

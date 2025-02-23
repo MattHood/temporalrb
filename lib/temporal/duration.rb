@@ -118,6 +118,14 @@ module Temporal
       end
     end
 
+    def negated
+      Duration.new(*fields.map(&:-@))
+    end
+
+    def -@ = negated
+
+    def +@ = Duration.new(*fields)
+
     private
 
     def check_sign!(args)
