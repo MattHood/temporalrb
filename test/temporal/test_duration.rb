@@ -204,5 +204,19 @@ module Temporal
         assert_equal 0, duration.public_send(unit)
       end
     end
+
+    def test_equal
+      assert_raises RangeError do
+        Duration.from("P1Y") == Duration.new(0, 12)
+      end
+
+      assert_equal Duration.from("P1D"), Duration.new(0, 0, 0, 1)
+      refute_equal Duration.from("P1D"), Duration.new(0, 0, 0, 2)
+      assert_equal Duration.from("P1Y"), Duration.new(1)
+
+      assert_equal Duration.from("P1D"), Duration.from("PT24H")
+      assert_equal Duration.from("PT1H"), Duration.from("PT60M")
+      assert_equal Duration.from("PT1M"), Duration.from("PT60S")
+    end
   end
 end

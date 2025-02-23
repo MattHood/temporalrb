@@ -87,11 +87,18 @@ module Temporal
       Duration.new(*fields.map(&:abs))
     end
 
-    private
 
-    def fields
-      [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]
+    def ==(other)
+      if fields == other.fields
+        true
+      elsif calendar? || other.calendar?
+        raise RangeError.new("A starting point is required for years, months, or weeks comparison")
+      else
+        total_nanoseconds == other.total_nanoseconds
+      end
     end
+
+    private
 
     def check_sign!(args)
       if args.all? { _1 == 0 }
@@ -103,6 +110,22 @@ module Temporal
       else
         raise RangeError.new("Mixed-sign values not allowed as duration fields")
       end
+    end
+
+    protected
+
+    def fields
+      [years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]
+    end
+
+    def calendar?
+      years.nonzero? || months.nonzero? || weeks.nonzero?
+    end
+
+    def total_nanoseconds
+      non_calendar_totals = Vector[24 * 60 * 60 * 1e9, 60 * 60 * 1e9, 60 * 1e9, 1e9, 1e6, 1e3, 1]
+      non_calendar_values = Vector[days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds]
+      non_calendar_totals.inner_product(non_calendar_values)
     end
   end
 end
