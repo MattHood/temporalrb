@@ -83,6 +83,10 @@ module Temporal
       sign == 0
     end
 
+    def abs
+      Duration.new(*fields.map(&:abs))
+    end
+
     private
 
     def fields

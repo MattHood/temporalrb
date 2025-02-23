@@ -187,5 +187,22 @@ module Temporal
       duration = Duration.new
       assert_equal true, duration.blank?
     end
+
+    def test_abs
+      duration = Duration.new(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1).abs
+      %i[years months weeks days hours minutes seconds milliseconds microseconds nanoseconds].each do |unit|
+        assert_equal 1, duration.public_send(unit)
+      end
+
+      duration = Duration.new(1, 1, 1, 1, 1, 1, 1, 1, 1, 1).abs
+      %i[years months weeks days hours minutes seconds milliseconds microseconds nanoseconds].each do |unit|
+        assert_equal 1, duration.public_send(unit)
+      end
+
+      duration = Duration.new.abs
+      %i[years months weeks days hours minutes seconds milliseconds microseconds nanoseconds].each do |unit|
+        assert_equal 0, duration.public_send(unit)
+      end
+    end
   end
 end
