@@ -218,5 +218,31 @@ module Temporal
       assert_equal Duration.from("PT1H"), Duration.from("PT60M")
       assert_equal Duration.from("PT1M"), Duration.from("PT60S")
     end
+
+    def test_add
+      calendar_cases = [
+        [1],
+        [0, 1],
+        [0, 0, 1]
+      ]
+      non_calendar_case = [0, 0, 0, 1]
+      calendar_cases.each do |calendar_case|
+        assert_raises RangeError do
+          duration_to_add = Duration.new(*non_calendar_case)
+          Duration.new(*calendar_case).add(duration_to_add)
+        end
+
+        assert_raises RangeError do
+          duration_to_add = Duration.new(*calendar_case)
+          Duration.new(*non_calendar_case).add(duration_to_add)
+        end
+      end
+
+      assert_equal Duration.from("P3D"), Duration.from("P1D").add(Duration.from("P2D"))
+      assert_equal Duration.from("P1DT4H"), Duration.from("PT20H").add(Duration.from("PT8H"))
+      assert_equal Duration.from("P1DT4H"), Duration.from("PT20H").add(Duration.from("PT6H60M3600S"))
+
+      assert_equal Duration.from("P3D"), Duration.from("P1D") + Duration.from("P2D")
+    end
   end
 end

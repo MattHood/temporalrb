@@ -41,6 +41,17 @@ module Temporal
           raise ArgumentError.new("Argument must be a Duration, Hash or String")
         end
       end
+
+      private
+
+      def from_nanoseconds(nanoseconds)
+        non_calendar_totals = [24 * 60 * 60 * 1e9, 60 * 60 * 1e9, 60 * 1e9, 1e9, 1e6, 1e3, 1]
+        non_calendar_values = non_calendar_totals.map do |total|
+          value, nanoseconds = nanoseconds.divmod(total)
+          value
+        end
+        Duration.new(0, 0, 0, *non_calendar_values)
+      end
     end
 
     def initialize(years = 0, months = 0, weeks = 0, days = 0, hours = 0, minutes = 0, seconds = 0, milliseconds = 0, microseconds = 0, nanoseconds = 0)
@@ -87,6 +98,15 @@ module Temporal
       Duration.new(*fields.map(&:abs))
     end
 
+    def add(other)
+      if calendar? || other.calendar?
+        raise RangeError.new("For years, months, or weeks arithmetic, use date arithmetic relative to a starting point")
+      else
+        Duration.send(:from_nanoseconds, (total_nanoseconds + other.total_nanoseconds))
+      end
+    end
+
+    def +(other) = add(other)
 
     def ==(other)
       if fields == other.fields
