@@ -101,5 +101,66 @@ module Temporal
         Duration.new(1, 0, -1, 0, 4, 0, -3, 0, 2, 0)
       end
     end
+
+    def test_from_duration
+      duration = Duration.from(
+        Duration.new(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+      )
+      assert_equal 1, duration.years
+      assert_equal 2, duration.months
+      assert_equal 3, duration.weeks
+      assert_equal 4, duration.days
+      assert_equal 5, duration.hours
+      assert_equal 6, duration.minutes
+      assert_equal 7, duration.seconds
+      assert_equal 8, duration.milliseconds
+      assert_equal 9, duration.microseconds
+      assert_equal 10, duration.nanoseconds
+    end
+
+    def test_from_hash
+      duration = Duration.from(
+        years: 1,
+        months: 2,
+        weeks: 3,
+        days: 4,
+        hours: 5,
+        minutes: 6,
+        seconds: 7,
+        milliseconds: 8,
+        microseconds: 9,
+        nanoseconds: 10
+      )
+      assert_equal 1, duration.years
+      assert_equal 2, duration.months
+      assert_equal 3, duration.weeks
+      assert_equal 4, duration.days
+      assert_equal 5, duration.hours
+      assert_equal 6, duration.minutes
+      assert_equal 7, duration.seconds
+      assert_equal 8, duration.milliseconds
+      assert_equal 9, duration.microseconds
+      assert_equal 10, duration.nanoseconds
+    end
+
+    def test_from_invalid
+      assert_raises ArgumentError do
+        Duration.from(Object.new)
+      end
+    end
+
+    def test_from_iso8601_duration
+      duration = Duration.from("P1Y2M40W4DT5H6M678.008009010S")
+      assert_equal 1, duration.years
+      assert_equal 2, duration.months
+      assert_equal 40, duration.weeks
+      assert_equal 4, duration.days
+      assert_equal 5, duration.hours
+      assert_equal 6, duration.minutes
+      assert_equal 678, duration.seconds
+      assert_equal 8, duration.milliseconds
+      assert_equal 9, duration.microseconds
+      assert_equal 10, duration.nanoseconds
+    end
   end
 end
