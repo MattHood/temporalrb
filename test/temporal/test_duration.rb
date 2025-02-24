@@ -288,5 +288,24 @@ module Temporal
 
       assert_equal Duration.from("P1D"), Duration.from("P3D") - Duration.from("P2D")
     end
+
+    def test_to_s
+      duration = Duration.from("P1Y1M1W1DT1H1M1.111111111S")
+      assert_equal "P1Y1M1W1DT1H1M1.111111111S", duration.to_s
+
+      duration = Duration.from("-P1Y1M1W1DT1H1M1.111111111S")
+      assert_equal "-P1Y1M1W1DT1H1M1.111111111S", duration.to_s
+
+      duration = Duration.from("+P1Y1M1W1DT1H1M1.111111111S")
+      assert_equal "P1Y1M1W1DT1H1M1.111111111S", duration.to_s
+
+      duration = Duration.from("P123Y456M789W987DT654H321M234.567898765S")
+      assert_equal "P123Y456M789W987DT654H321M234.567898765S", duration.to_s
+    end
+
+    def test_to_json
+      duration = Duration.from("P1Y1M1W1DT1H1M1.111111111S")
+      assert_equal "P1Y1M1W1DT1H1M1.111111111S", duration.to_json
+    end
   end
 end

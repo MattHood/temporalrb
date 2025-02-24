@@ -36,7 +36,12 @@ module Temporal
             arg[:nanoseconds] || 0
           )
         when String
-          Duration.from(ISO8601Duration.new(arg).to_h)
+          iso8601 = ISO8601Duration.new(arg).to_h
+          sign = iso8601.delete(:sign)
+          duration_values = iso8601.transform_values do |val|
+            val.nil? ? nil : val * sign
+          end
+          Duration.from(duration_values)
         else
           raise ArgumentError.new("Argument must be a Duration, Hash or String")
         end
@@ -136,6 +141,24 @@ module Temporal
     end
 
     def -(other) = subtract(other)
+
+    def to_s
+      ISO8601Duration.new(
+        sign: (sign == -1) ? -1 : 1,
+        years: years.abs,
+        months: months.abs,
+        weeks: weeks.abs,
+        days: days.abs,
+        hours: hours.abs,
+        minutes: minutes.abs,
+        seconds: seconds.abs,
+        milliseconds: milliseconds.abs,
+        microseconds: microseconds.abs,
+        nanoseconds: nanoseconds.abs
+      ).to_s
+    end
+
+    def to_json = to_s
 
     private
 
