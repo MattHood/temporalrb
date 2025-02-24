@@ -261,5 +261,32 @@ module Temporal
       duration = Duration.from("P1Y1M1W1DT1H1M1S")
       assert_equal duration, +duration
     end
+
+    def test_subtract
+      calendar_cases = [
+        [1],
+        [0, 1],
+        [0, 0, 1]
+      ]
+      non_calendar_case = [0, 0, 0, 1]
+      calendar_cases.each do |calendar_case|
+        assert_raises RangeError do
+          duration_to_subtract = Duration.new(*non_calendar_case)
+          Duration.new(*calendar_case).subtract(duration_to_subtract)
+        end
+
+        assert_raises RangeError do
+          duration_to_subtract = Duration.new(*calendar_case)
+          Duration.new(*non_calendar_case).subtract(duration_to_subtract)
+        end
+      end
+
+      assert_equal Duration.from("P3D"), Duration.from("P4D").subtract(Duration.from("P1D"))
+      assert_equal Duration.from("PT20H"), Duration.from("P1DT4H").subtract(Duration.from("PT8H"))
+      assert_equal Duration.from("PT20H"), Duration.from("P1DT4H").subtract(Duration.from("PT6H60M3600S"))
+      assert_equal Duration.from("-PT15M"), Duration.from("P1D").subtract(Duration.from("PT24H15M"))
+
+      assert_equal Duration.from("P1D"), Duration.from("P3D") - Duration.from("P2D")
+    end
   end
 end

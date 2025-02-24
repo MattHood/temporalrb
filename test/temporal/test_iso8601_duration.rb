@@ -177,6 +177,18 @@ module Temporal
       assert_equal 8, duration[:milliseconds]
       assert_equal 9, duration[:microseconds]
       assert_equal 10, duration[:nanoseconds]
+
+      duration = ISO8601Duration.new("-P1Y2M3W4DT5H6M7.008009010S").to_h
+      assert_equal(-1, duration[:years])
+      assert_equal(-2, duration[:months])
+      assert_equal(-3, duration[:weeks])
+      assert_equal(-4, duration[:days])
+      assert_equal(-5, duration[:hours])
+      assert_equal(-6, duration[:minutes])
+      assert_equal(-7, duration[:seconds])
+      assert_equal(-8, duration[:milliseconds])
+      assert_equal(-9, duration[:microseconds])
+      assert_equal(-10, duration[:nanoseconds])
     end
   end
 end

@@ -45,10 +45,15 @@ module Temporal
       private
 
       def from_nanoseconds(nanoseconds)
+        magnitude, sign = if nanoseconds.negative?
+          [nanoseconds.abs, -1]
+        else
+          [nanoseconds, 1]
+        end
         non_calendar_totals = [24 * 60 * 60 * 1e9, 60 * 60 * 1e9, 60 * 1e9, 1e9, 1e6, 1e3, 1]
         non_calendar_values = non_calendar_totals.map do |total|
-          value, nanoseconds = nanoseconds.divmod(total)
-          value
+          value, magnitude = magnitude.divmod(total)
+          sign * value
         end
         Duration.new(0, 0, 0, *non_calendar_values)
       end
@@ -125,6 +130,12 @@ module Temporal
     def -@ = negated
 
     def +@ = Duration.new(*fields)
+
+    def subtract(other)
+      add(other.negated)
+    end
+
+    def -(other) = subtract(other)
 
     private
 
