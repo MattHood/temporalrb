@@ -307,5 +307,57 @@ module Temporal
       duration = Duration.from("P1Y1M1W1DT1H1M1.111111111S")
       assert_equal "P1Y1M1W1DT1H1M1.111111111S", duration.to_json
     end
+
+    def test_with
+      assert_raises ArgumentError do
+        Duration.new.with(foo: "foo")
+      end
+
+      original_duration = Duration.new
+      new_duration = original_duration.with(
+        years: 1,
+        months: 2,
+        weeks: 3,
+        days: 4,
+        hours: 5,
+        minutes: 6,
+        seconds: 7,
+        milliseconds: 8,
+        microseconds: 9,
+        nanoseconds: 10
+      )
+      assert_equal Duration.new(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), new_duration
+
+      original_duration = Duration.new(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+      new_duration = original_duration.with({})
+      assert_equal Duration.new(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), new_duration
+
+      original_duration = Duration.new(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+      new_duration = original_duration.with(
+        years: 11,
+        months: 12,
+        weeks: 13,
+        days: 14,
+        hours: 15,
+        minutes: 16,
+        seconds: 17,
+        milliseconds: 18,
+        microseconds: 19,
+        nanoseconds: 20
+      )
+      assert_equal Duration.new(11, 12, 13, 14, 15, 16, 17, 18, 19, 20), new_duration
+
+      original_duration = Duration.new(1, 2, 3, 4, 5, 6, 7)
+      new_duration = original_duration.with(
+        days: 14,
+        hours: 15,
+        minutes: 16,
+        seconds: 17,
+        milliseconds: 18,
+        microseconds: 19,
+        nanoseconds: 20
+      )
+      assert_equal Duration.new(1, 2, 3, 14, 15, 16, 17, 18, 19, 20), new_duration
+    end
   end
 end

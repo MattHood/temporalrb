@@ -4,7 +4,8 @@ require "matrix"
 
 module Temporal
   class Duration
-    attr_reader :years, :months, :weeks, :days, :hours, :minutes, :seconds, :milliseconds, :microseconds, :nanoseconds
+    FIELDS = %i[years months weeks days hours minutes seconds milliseconds microseconds nanoseconds]
+    attr_reader(*FIELDS)
 
     class << self
       def from(arg)
@@ -159,6 +160,25 @@ module Temporal
     end
 
     def to_json = to_s
+
+    def with(arg)
+      unless (arg.keys - FIELDS).empty?
+        raise ArgumentError.new("Unrecognised attributes: #{(arg.keys - FIELDS).join(", ")}")
+      end
+
+      Duration.new(
+        arg[:years] || years,
+        arg[:months] || months,
+        arg[:weeks] || weeks,
+        arg[:days] || days,
+        arg[:hours] || hours,
+        arg[:minutes] || minutes,
+        arg[:seconds] || seconds,
+        arg[:milliseconds] || milliseconds,
+        arg[:microseconds] || microseconds,
+        arg[:nanoseconds] || nanoseconds
+      )
+    end
 
     private
 
